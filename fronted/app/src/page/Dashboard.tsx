@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Appbar } from './Appbar';
+import { Appbar } from '../components/Appbar';
 
 export const Dashboard: React.FC = () => {
     const [specializations, setSpecializations] = useState<string[]>([]);

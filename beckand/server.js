@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const auth = require('./middleware/auth');
 const { Patient, Doctor, Interaction } = require('./model');
 
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -103,7 +104,7 @@ app.post('/signup', async (req, res) => {
     const patient = new Patient({ name, email, password: hashedPassword, age, gender });
     await patient.save();
     const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    res.json({ token, email });
   } catch (error) {
     res.status(500).json({ message: 'Error signing up', error });
   }
@@ -121,7 +122,7 @@ app.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    res.json({ token, email });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in', error });
   }
@@ -145,21 +146,28 @@ app.get('/interactions', auth, async (req, res) => {
   }
 });
 
+
+
 app.post('/chat', auth, async (req, res) => {
   const { specialization, query } = req.body;
+  
   try {
     const doctor = await Doctor.findOne({ specialization });
     if (!doctor) {
       return res.status(404).json({ message: 'Doctor not found' });
     }
     const response = await generateContent(query);
-    await saveInteraction(req.patient.id, doctor._id, query, response);
+    if(response !== "") {
+      await saveInteraction(req.patient.id, doctor._id, query, response);
+    }
     res.json({ response });
   } catch (error) {
     console.error('Error handling chat:', error);
     res.status(500).send('Error handling chat');
   }
 });
+
+
 
 app.listen(3000, () => {
   console.log('Server is running on port 3001');

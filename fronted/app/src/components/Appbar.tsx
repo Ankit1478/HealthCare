@@ -5,56 +5,41 @@ export const Appbar = () => {
     const userToken = localStorage.getItem("token");
 
     return (
-        <div className="border-b border-slate-100 flex justify-between items-center p-4 md:px-16">
-            <Link to="/" className="text-xl font-bold">
-                Medium
+        <div className="border-b border-teal-100 flex justify-between items-center p-4 md:px-16 bg-teal-50">
+            <Link to="/" className="text-xl font-bold text-teal-700">
+                HealthCare
             </Link>
             <div className="flex gap-4 md:gap-8">
                 {userToken ? (
                     <>
-                        <Link to="/post">
+                        <Link to="/appointment">
                             <button
                                 type="button"
-                                className="focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium flex items-center gap-2 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 mx-12"
+                                className="focus:outline-none hover:bg-teal-100 focus:ring-4 focus:ring-teal-100 font-medium flex items-center gap-2 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 mx-12 bg-white border border-teal-300 text-teal-700"
                             >
-                                <WriteIcon /> Write
+                                <AppointmentIcon /> Book Appointment
                             </button>
                         </Link>
-                        <Link to="/geneartiveAi">
+                        <Link to="/services">
                             <button
                                 type="button"
-                                className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                className="text-white bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                             >
-                                Generate With AI
+                                Our Services
                             </button>
                         </Link>
                         <ProfileBox />
                     </>
                 ) : (
-                    <div className="border-b border-slate-100 flex justify-between items-center p-3 md:px-16">
-                        <div className="flex gap-2 md:gap-1">
-                            <div>
-                                <Link to="/geneartiveAi">
-                                    <button
-                                        type="button"
-                                        className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
-                                    >
-                                        Generate With AI
-                                    </button>
-                                </Link>
-                            </div>
-                            <div className="p-2">
-                                <Link
-                                    to="/signin"
-                                    className="focus:outline-none text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2"
-                                >
-                                    Sign In
-                                </Link>
-                            </div>
-                        </div>
+                    <div className="flex gap-4 md:gap-8">
+                        <Link
+                            to="/signin"
+                            className="focus:outline-none text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2"
+                        >
+                            Sign In
+                        </Link>
                     </div>
                 )}
-
             </div>
         </div>
     );
@@ -70,16 +55,25 @@ function ProfileBox() {
         window.location.reload();
     };
 
-    const getName = localStorage.getItem("name") || "Ankit";
+    const profileView = () => {
+        navigate("/profile");
+    }
+
+    const getName = localStorage.getItem("name") || "User";
     return (
         <div className="relative cursor-pointer">
             <Avatar name={getName} onClick={() => setShow(!show)} />
             {show && (
-                <div className="absolute -bottom-24 -left-16 shadow-lg p-4 bg-gray-50 border border-gray-100 z-50 w-[160px]">
-                    <div className="flex flex-col gap-3">
-                        <div onClick={logout}>Logout</div>
+                <div>
+                    <div className="absolute -bottom-24 -left-16 shadow-lg p-4 bg-teal-50 border border-teal-100 z-50 w-[160px]">
+                        <div className="flex flex-col gap-3">
+                            <div onClick={logout} className="cursor-pointer text-teal-700">Logout</div>
+                            <div onClick={profileView} className="cursor-pointer text-teal-700">Profile</div>
+
+                        </div>
                     </div>
                 </div>
+
             )}
         </div>
     );
@@ -89,9 +83,9 @@ export function Avatar({ name, onClick }: { name: string; onClick?: MouseEventHa
     return (
         <div
             onClick={onClick}
-            className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-200 hover:bg-gray-50 rounded-full"
+            className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-teal-200 hover:bg-teal-50 rounded-full"
         >
-            <span className="font-medium text-gray-600">
+            <span className="font-medium text-teal-700">
                 {name.split(" ")?.[0]?.[0]}
                 {name?.split(" ")?.[1]?.[0]}
             </span>
@@ -99,7 +93,7 @@ export function Avatar({ name, onClick }: { name: string; onClick?: MouseEventHa
     );
 }
 
-const WriteIcon = () => {
+const AppointmentIcon = () => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -112,10 +106,8 @@ const WriteIcon = () => {
             <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                d="M12 8.5V12m0 0v3.5m0-3.5h3.5m-3.5 0H8.5m-2.67-6.73a9 9 0 1 0 12.34 12.34A9 9 0 0 0 5.83 5.83z"
             />
         </svg>
     );
 };
-
-export default WriteIcon;
