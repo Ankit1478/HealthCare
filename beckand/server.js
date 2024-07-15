@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/patientDashboard', {
+mongoose.connect('mongodb+srv://varsha1478v:cRuszUJ6QhP2Rubb@cluster0.jhwrfz5.mongodb.net/ark', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
@@ -196,6 +196,6 @@ app.post('/chat', auth, async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+app.listen(8080, () => {
   console.log('Server is running on port 3000');
 });

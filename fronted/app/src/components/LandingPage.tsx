@@ -17,7 +17,7 @@ const MedicalTemplate: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:3000/doctordetails')
+        axios.get('http://localhost:8080/doctordetails')
             .then(response => setDoctors(response.data))
             .catch(error => console.error('Error fetching doctors:', error));
     }, []);

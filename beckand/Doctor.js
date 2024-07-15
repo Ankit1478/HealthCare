@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { Doctor } = require('./model');
 
-mongoose.connect('mongodb://localhost:27017/patientDashboard', {
+mongoose.connect('mongodb+srv://varsha1478v:cRuszUJ6QhP2Rubb@cluster0.jhwrfz5.mongodb.net/ark', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(async () => {

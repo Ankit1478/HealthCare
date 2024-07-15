@@ -18,7 +18,7 @@ export function Chat() {
     useEffect(() => {
         const fetchSpecializations = async () => {
             try {
-                const result = await axios.get('http://localhost:3000/specializations');
+                const result = await axios.get('http://localhost:8080/specializations');
                 setSpecializations(result.data);
             } catch (error) {
                 console.error('Error fetching specializations:', error);
@@ -45,7 +45,7 @@ export function Chat() {
         try {
             const token = localStorage.getItem('token');
             const result = await axios.post(
-                'http://localhost:3000/chat',
+                'http://localhost:8080/chat',
                 { specialization: selectedSpecialization, query },
                 { headers: { Authorization: token } }
             );

@@ -9,7 +9,7 @@ export function History() {
     const fetchInteractions = async () => {
         try {
             const token = localStorage.getItem('token');
-            const result = await axios.get('http://localhost:3000/interactions', {
+            const result = await axios.get('http://localhost:8080/interactions', {
                 headers: { Authorization: token }
             });
             setInteractions(result.data);
