@@ -3,8 +3,10 @@ import 'tailwindcss/tailwind.css';
 import { Appbar } from './Appbar';
 import axios from 'axios';
 import Chat from '../page/Chat';
+import { useNavigate } from 'react-router-dom';
 
 interface Doctor {
+    _id: string;
     name: string;
     image: string;
     specialization: string;
@@ -12,8 +14,7 @@ interface Doctor {
 
 const MedicalTemplate: React.FC = () => {
     const [doctors, setDoctors] = useState<Doctor[]>([]);
-
-    const token = localStorage.getItem('token');
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('http://localhost:3000/doctordetails')
@@ -21,14 +22,14 @@ const MedicalTemplate: React.FC = () => {
             .catch(error => console.error('Error fetching doctors:', error));
     }, []);
 
+    const handleImageClick = (id: string) => {
+        navigate(`/doctor/${id}`);
+    };
+
     return (
-
         <div className="relative min-h-screen bg-[#f0fdfa]">
-
             <Appbar />
-
             <div>
-
                 <div className="slider-area2">
                     <div className="slider-height2 flex items-center justify-center bg-gradient-to-r from-teal-500 to-green-500 py-20">
                         <div className="text-center">
@@ -36,7 +37,6 @@ const MedicalTemplate: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
                 <div className="team-area section-padding30 py-10">
                     <div className="container mx-auto">
                         <div className="text-center mb-10">
@@ -46,7 +46,11 @@ const MedicalTemplate: React.FC = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             <Chat />
                             {doctors.map((doctor, index) => (
-                                <div key={index} className="bg-white rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl">
+                                <div
+                                    key={index}
+                                    className="bg-white rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl"
+                                    onClick={() => handleImageClick(doctor._id)}
+                                >
                                     <div className="flex flex-col items-center p-4">
                                         <img src={doctor.image} alt={doctor.name} className="h-64 w-full object-cover rounded-t-lg" />
                                         <div className="p-4 text-center">
@@ -59,13 +63,10 @@ const MedicalTemplate: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
             </div>
-
             <footer className="bg-gray-800 py-10 text-white text-center">
                 <p>&copy; {new Date().getFullYear()} HealthCare. All Rights Reserved.</p>
             </footer>
-
         </div>
     );
 };

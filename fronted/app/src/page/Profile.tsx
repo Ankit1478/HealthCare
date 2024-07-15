@@ -3,9 +3,17 @@ import axios from 'axios';
 import { Chat } from './Chat';
 import { Appbar } from '../components/Appbar';
 
+
+interface Doctor {
+    name: string;
+    image: string;
+    specialization: string;
+}
+
 export const Profile: React.FC = () => {
     const [profile, setProfile] = useState<any>(null);
     const [interactions, setInteractions] = useState<any[]>([]);
+    const [doctors, setDoctors] = useState<Doctor[]>([]);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -19,6 +27,7 @@ export const Profile: React.FC = () => {
                 console.error('Error fetching profile:', error);
             }
         };
+
 
         const fetchInteractions = async () => {
             try {

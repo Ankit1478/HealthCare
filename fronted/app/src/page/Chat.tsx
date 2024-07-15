@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { Dialog, Transition } from '@headlessui/react';
+import { useNavigate } from 'react-router-dom';
 
 export function Chat() {
     const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +11,9 @@ export function Chat() {
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
+
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         const fetchSpecializations = async () => {
@@ -32,6 +36,9 @@ export function Chat() {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
+        if (!token) {
+            navigate("/signup");
+        }
         setLoading(true);
         e.preventDefault();
         setError(null);

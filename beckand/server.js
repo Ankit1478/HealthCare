@@ -3,14 +3,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const axios = require('axios');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('./middleware/auth');
 const { Patient, Doctor, Interaction } = require('./model');
-
+const axios = require('axios');
 
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -23,16 +23,15 @@ mongoose.connect('mongodb://localhost:27017/patientDashboard', {
   console.error('Error connecting to MongoDB:', err);
 });
 
-
 const formatGeneratedText = (text) => {
   return text
-    .replace(/##+/g, '')  // Remove Markdown headers
-    .replace(/\*\*/g, '')  // Remove bold formatting
-    .replace(/\*/g, '')  // Remove italic formatting
-    .replace(/- /g, '- ')  // Ensure proper formatting for lists
-    .replace(/(\d\.)/g, '\n$1')  // Add line breaks before numbered lists
-    .replace(/\n+/g, ' ')  // Replace multiple line breaks with a single space
-    .trim();  // Remove leading and trailing whitespace
+    .replace(/##+/g, '') 
+    .replace(/\*\*/g, '') 
+    .replace(/\*/g, '') 
+    .replace(/- /g, '- ') 
+    .replace(/(\d\.)/g, '\n$1') 
+    .replace(/\n+/g, ' ') 
+    .trim(); 
 };
 
 const generateContent = async (prompt) => {
@@ -62,7 +61,6 @@ const generateContent = async (prompt) => {
   }
 };
 
-
 const saveInteraction = async (patientId, doctorId, query, response) => {
   const interaction = new Interaction({
     patientId,
@@ -75,27 +73,27 @@ const saveInteraction = async (patientId, doctorId, query, response) => {
 };
 
 const doctors = [
-    { name: 'Dr. Smith', specialization: 'Skin' },
-    { name: 'Dr. Janvi', specialization: 'Hair' },
-    { name: 'Dr. Williams', specialization: 'Dental' },
-    { name: 'Dr. Brown', specialization: 'Cardiology' },
-    { name: 'Dr. Sherya', specialization: 'Neurology' },
-    { name: 'Dr. Garcia', specialization: 'Orthopedics' },
-    { name: 'Dr. Miller', specialization: 'Pediatrics' },
-    { name: 'Dr. Davis', specialization: 'Psychiatry' },
-    { name: 'Dr. Nisha', specialization: 'Radiology' },
-    { name: 'Dr. Martinez', specialization: 'Gastroenterology' },
-    { name: 'Dr. Kushi', specialization: 'Urology' },
-    { name: 'Dr. Kirat', specialization: 'Oncology' },
-    { name: 'Dr. Verma', specialization: 'Gynecology' },
-    { name: 'Dr. Wilson', specialization: 'Endocrinology' },
+  { name: 'Dr. Smith', specialization: 'Skin' },
+  { name: 'Dr. Janvi', specialization: 'Hair' },
+  { name: 'Dr. Williams', specialization: 'Dental' },
+  { name: 'Dr. Brown', specialization: 'Cardiology' },
+  { name: 'Dr. Sherya', specialization: 'Neurology' },
+  { name: 'Dr. Garcia', specialization: 'Orthopedics' },
+  { name: 'Dr. Miller', specialization: 'Pediatrics' },
+  { name: 'Dr. Davis', specialization: 'Psychiatry' },
+  { name: 'Dr. Nisha', specialization: 'Radiology' },
+  { name: 'Dr. Martinez', specialization: 'Gastroenterology' },
+  { name: 'Dr. Kushi', specialization: 'Urology' },
+  { name: 'Dr. Kirat', specialization: 'Oncology' },
+  { name: 'Dr. Verma', specialization: 'Gynecology' },
+  { name: 'Dr. Wilson', specialization: 'Endocrinology' },
 ];
 
 const specializations = [...new Set(doctors.map(doctor => doctor.specialization))];
-app.get('/specializations', (req, res) => {
-    res.json(specializations);
-});
 
+app.get('/specializations', (req, res) => {
+  res.json(specializations);
+});
 
 app.post('/signup', async (req, res) => {
   const { name, email, password, age, gender } = req.body;
@@ -137,6 +135,7 @@ app.get('/profile', auth, async (req, res) => {
   }
 });
 
+
 app.get('/doctordetails', async (req, res) => {
   try {
     const doctors = await Doctor.find();
@@ -146,6 +145,28 @@ app.get('/doctordetails', async (req, res) => {
   }
 });
 
+app.get('/doctordetails/:id', async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id);
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+    res.json(doctor);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/interactions/:doctorId', auth, async (req, res) => {
+  try {
+    const doctorId = req.params.doctorId;
+    const userId = req.patient.id;
+    const conversations = await Interaction.find({ doctorId, patientId: userId });
+    res.json(conversations);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.get('/interactions', auth, async (req, res) => {
   try {
@@ -155,8 +176,6 @@ app.get('/interactions', auth, async (req, res) => {
     res.status(500).json({ message: 'Error fetching interactions', error });
   }
 });
-
-
 
 app.post('/chat', auth, async (req, res) => {
   const { specialization, query } = req.body;
@@ -177,8 +196,6 @@ app.post('/chat', auth, async (req, res) => {
   }
 });
 
-
-
 app.listen(3000, () => {
-  console.log('Server is running on port 3001');
+  console.log('Server is running on port 3000');
 });
