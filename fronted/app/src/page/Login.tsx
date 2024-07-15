@@ -35,7 +35,7 @@ export function Login() {
             const res = await axios.post('http://localhost:3000/login', formData);
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('email', res.data.email);
-            navigate('/profile');
+            navigate('/');
         } catch (error) {
             console.error('Error during signup:', error);
         }

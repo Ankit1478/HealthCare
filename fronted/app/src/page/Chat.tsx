@@ -20,7 +20,6 @@ export function Chat() {
                 console.error('Error fetching specializations:', error);
             }
         };
-
         fetchSpecializations();
     }, []);
 
@@ -61,7 +60,7 @@ export function Chat() {
     };
 
     return (
-        <div className="fixed bottom-5 right-5">
+        <div className="fixed bottom-5 right-5 z-50">
             <button
                 onClick={togglePopup}
                 className="bg-[#0e8f83] text-white p-3 rounded-full shadow-lg"
@@ -94,11 +93,23 @@ export function Chat() {
                             leaveTo="opacity-0 scale-95"
                         >
                             <div className="bg-white rounded-lg max-w-md mx-auto p-5 w-full z-50">
-                                <div className="flex flex-col h-full text-gray-800">
-                                    <div className="flex items-center justify-between p-4 border-b border-blue-200 bg-blue-100">
+                                <div className="">
+                                    <div className="flex items-center justify-between p-4 ">
                                         <div className="flex items-center space-x-2">
                                             <span className="text-lg font-semibold text-green-900">Chat</span>
                                         </div>
+                                        <select
+                                            value={selectedSpecialization}
+                                            onChange={(e) => setSelectedSpecialization(e.target.value)}
+                                            className="p-2 border border-gray-300 rounded"
+                                        >
+                                            <option value="">Select Specialization</option>
+                                            {specializations.map((spec) => (
+                                                <option key={spec} value={spec}>
+                                                    {spec}
+                                                </option>
+                                            ))}
+                                        </select>
                                         <div className="flex items-center space-x-2">
                                             <button onClick={closeDialog} className="text-xl font-bold">
                                                 &times;
@@ -106,16 +117,16 @@ export function Chat() {
                                         </div>
                                     </div>
 
-                                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-blue-50 max-h-80">
+                                    <div className="flex-1 overflow-y-auto p-4 space-y-4  max-h-80">
                                         {messages.map((message, index) => (
                                             <div key={index} className="space-y-4">
                                                 <div className="flex justify-end">
-                                                    <div className="bg-blue-600 text-white p-3 rounded-lg shadow-md">
+                                                    <div className=" text-black p-3 rounded-lg shadow-md">
                                                         {message.query}
                                                     </div>
                                                 </div>
                                                 <div className="flex items-start space-x-2">
-                                                    <div className="bg-white text-gray-800 p-3 rounded-lg shadow-md border border-blue-200">
+                                                    <div className="bg-white text-gray-800 p-3 rounded-lg shadow-md border ">
                                                         {message.response}
                                                     </div>
                                                 </div>
@@ -128,25 +139,14 @@ export function Chat() {
                                         )}
                                     </div>
 
-                                    <form onSubmit={handleSubmit} className="p-4 border-t border-blue-200 bg-blue-100">
+                                    <form onSubmit={handleSubmit} className="p-4  ">
                                         <div className="flex flex-col space-y-2">
-                                            <select
-                                                value={selectedSpecialization}
-                                                onChange={(e) => setSelectedSpecialization(e.target.value)}
-                                                className="p-2 border border-gray-300 rounded"
-                                            >
-                                                <option value="">Select Specialization</option>
-                                                {specializations.map((spec) => (
-                                                    <option key={spec} value={spec}>
-                                                        {spec}
-                                                    </option>
-                                                ))}
-                                            </select>
+
                                             <textarea
                                                 value={query}
                                                 onChange={(e) => setQuery(e.target.value)}
                                                 placeholder="Enter your query"
-                                                className="p-2 border border-gray-300 rounded-lg h-20"
+                                                className="p-2 border border-gray-300 rounded-3xl h-12"
                                             />
                                             <button type="submit" className="w-full bg-[#0e8f83] text-white p-2 rounded">
                                                 {loading ? "Wait.." : "Ask"}

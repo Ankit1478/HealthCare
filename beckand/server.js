@@ -76,18 +76,18 @@ const saveInteraction = async (patientId, doctorId, query, response) => {
 
 const doctors = [
     { name: 'Dr. Smith', specialization: 'Skin' },
-    { name: 'Dr. Johnson', specialization: 'Hair' },
+    { name: 'Dr. Janvi', specialization: 'Hair' },
     { name: 'Dr. Williams', specialization: 'Dental' },
     { name: 'Dr. Brown', specialization: 'Cardiology' },
-    { name: 'Dr. Jones', specialization: 'Neurology' },
+    { name: 'Dr. Sherya', specialization: 'Neurology' },
     { name: 'Dr. Garcia', specialization: 'Orthopedics' },
     { name: 'Dr. Miller', specialization: 'Pediatrics' },
     { name: 'Dr. Davis', specialization: 'Psychiatry' },
-    { name: 'Dr. Rodriguez', specialization: 'Radiology' },
+    { name: 'Dr. Nisha', specialization: 'Radiology' },
     { name: 'Dr. Martinez', specialization: 'Gastroenterology' },
-    { name: 'Dr. Hernandez', specialization: 'Urology' },
-    { name: 'Dr. Lopez', specialization: 'Oncology' },
-    { name: 'Dr. Gonzalez', specialization: 'Gynecology' },
+    { name: 'Dr. Kushi', specialization: 'Urology' },
+    { name: 'Dr. Kirat', specialization: 'Oncology' },
+    { name: 'Dr. Verma', specialization: 'Gynecology' },
     { name: 'Dr. Wilson', specialization: 'Endocrinology' },
 ];
 
@@ -136,6 +136,16 @@ app.get('/profile', auth, async (req, res) => {
     res.status(500).json({ message: 'Error fetching profile', error });
   }
 });
+
+app.get('/doctordetails', async (req, res) => {
+  try {
+    const doctors = await Doctor.find();
+    res.json(doctors);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 
 app.get('/interactions', auth, async (req, res) => {
   try {

@@ -9,25 +9,27 @@ export const Appbar = () => {
             <Link to="/" className="text-xl font-bold text-teal-700">
                 HealthCare
             </Link>
-            <div className="flex gap-4 md:gap-8">
+            <div className="flex gap-4 md:gap-8 items-center">
                 {userToken ? (
                     <>
-                        <Link to="/appointment">
-                            <button
-                                type="button"
-                                className="focus:outline-none hover:bg-teal-100 focus:ring-4 focus:ring-teal-100 font-medium flex items-center gap-2 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 mx-12 bg-white border border-teal-300 text-teal-700"
-                            >
-                                <AppointmentIcon /> Book Appointment
-                            </button>
-                        </Link>
-                        <Link to="/services">
-                            <button
-                                type="button"
-                                className="text-white bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                            >
-                                Our Services
-                            </button>
-                        </Link>
+                        <div className="hidden md:flex gap-4">
+                            <Link to="/appointment">
+                                <button
+                                    type="button"
+                                    className="focus:outline-none hover:bg-teal-100 focus:ring-4 focus:ring-teal-100 font-medium flex items-center gap-2 rounded-lg text-sm px-5 py-2.5 me-2 mb-2 bg-white border border-teal-300 text-teal-700"
+                                >
+                                    <AppointmentIcon /> Book Appointment
+                                </button>
+                            </Link>
+                            <Link to="/history">
+                                <button
+                                    type="button"
+                                    className="text-white bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                >
+                                    Chat summary
+                                </button>
+                            </Link>
+                        </div>
                         <ProfileBox />
                     </>
                 ) : (
@@ -57,23 +59,25 @@ function ProfileBox() {
 
     const profileView = () => {
         navigate("/profile");
-    }
+    };
 
     const getName = localStorage.getItem("name") || "User";
     return (
         <div className="relative cursor-pointer">
             <Avatar name={getName} onClick={() => setShow(!show)} />
             {show && (
-                <div>
-                    <div className="absolute -bottom-24 -left-16 shadow-lg p-4 bg-teal-50 border border-teal-100 z-50 w-[160px]">
-                        <div className="flex flex-col gap-3">
-                            <div onClick={logout} className="cursor-pointer text-teal-700">Logout</div>
-                            <div onClick={profileView} className="cursor-pointer text-teal-700">Profile</div>
-
+                <div className="absolute top-full right-0 md:right-auto md:left-0 shadow-lg p-1 bg-teal-50 border border-teal-100 z-50 w-[160px]">
+                    <div className="flex flex-col gap-3 p-2">
+                        <div onClick={logout} className="cursor-pointer text-teal-700">Logout</div>
+                        <div onClick={profileView} className="cursor-pointer text-teal-700">Profile</div>
+                        <div className="block md:hidden cursor-pointer text-teal-700" onClick={() => navigate("/appointment")}>
+                            Book Appointment
+                        </div>
+                        <div className="block md:hidden cursor-pointer text-teal-700" onClick={() => navigate("/history")}>
+                            Chat Summary
                         </div>
                     </div>
                 </div>
-
             )}
         </div>
     );

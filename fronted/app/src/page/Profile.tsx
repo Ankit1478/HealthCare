@@ -42,27 +42,31 @@ export const Profile: React.FC = () => {
             <Chat />
             <div className="container mx-auto p-6">
                 {profile && (
-                    <div className="mb-10 bg-white shadow-lg rounded-lg p-6">
-                        <h2 className="text-3xl font-bold text-teal-700 mb-4">Profile</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <p><strong>Name:</strong> {profile.name}</p>
-                            <p><strong>Email:</strong> {profile.email}</p>
-                            <p><strong>Age:</strong> {profile.age}</p>
-                            <p><strong>Gender:</strong> {profile.gender}</p>
+                    <div>
+                        <div className="mb-10 bg-white shadow-lg rounded-lg p-6">
+                            <h2 className="text-3xl font-bold text-teal-700 mb-4">Profile</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <p><strong>Name:</strong> {profile.name}</p>
+                                <p><strong>Email:</strong> {profile.email}</p>
+                                <p><strong>Age:</strong> {profile.age}</p>
+                                <p><strong>Gender:</strong> {profile.gender}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="bg-white shadow-lg rounded-lg p-6">
+                                <h2 className="text-3xl font-bold text-teal-700 mb-4">Linked Doctor</h2>
+                                {interactions.map((interaction) => (
+                                    <div key={interaction._id} className="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm">
+                                        <p><strong>Doctor:</strong> {interaction.doctorId.name}</p>
+                                        <p><strong>specialization:</strong> {interaction.doctorId.specialization}</p>
+                                        <p><strong>Query:</strong> {interaction.query}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 )}
-                <div className="bg-white shadow-lg rounded-lg p-6">
-                    <h2 className="text-3xl font-bold text-teal-700 mb-4">Chat History</h2>
-                    {interactions.map((interaction) => (
-                        <div key={interaction._id} className="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm">
-                            <p><strong>Doctor:</strong> {interaction.doctorId.name} ({interaction.doctorId.specialization})</p>
-                            <p><strong>Query:</strong> {interaction.query}</p>
-                            <p><strong>Response:</strong> {interaction.response}</p>
-                            <p><strong>Date:</strong> {new Date(interaction.interactionDate).toLocaleString()}</p>
-                        </div>
-                    ))}
-                </div>
+
             </div>
         </div>
     );
