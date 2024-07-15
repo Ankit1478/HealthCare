@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Container, Typography, Avatar, Paper, CircularProgress, Alert, List, ListItem, ListItemText, Divider, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Container, Typography, Avatar, Paper, CircularProgress, Alert, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { Appbar } from '../components/Appbar';
 
 interface Doctor {
