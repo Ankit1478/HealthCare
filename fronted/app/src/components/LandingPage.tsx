@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+
 import 'tailwindcss/tailwind.css';
 import { Appbar } from './Appbar';
 import Chat from '../page/Chat';
@@ -6,12 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import { useDoctorDetails } from '../hooks/useDcotordetails';
 
-interface Doctor {
-    _id: string;
-    name: string;
-    image: string;
-    specialization: string;
-}
 
 const MedicalTemplate: React.FC = () => {
     const { doctors, loading } = useDoctorDetails();
