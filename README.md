@@ -42,8 +42,6 @@ This project implements CI using GitHub Actions. The provided `build.yml` workfl
 3. Start the development server:
    ```sh
     npm run dev
-
-
 #### Backend
 1. Navigate to the backend directory:
    ```sh
@@ -62,7 +60,7 @@ This project implements CI using GitHub Actions. The provided `build.yml` workfl
    docker build -t your_frontend_image_name .
 2. Run the Docker container:
    ```sh
-  docker run -p your_port:your_port your_frontend_image_name
+   docker run -p your_port:your_port your_frontend_image_name
 
 ###Backend
 1. Build the Docker image: 
