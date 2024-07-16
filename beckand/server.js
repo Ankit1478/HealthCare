@@ -101,7 +101,7 @@ app.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const patient = new Patient({ name, email, password: hashedPassword, age, gender });
     await patient.save();
-    const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET);
     res.json({ token, email });
   } catch (error) {
     res.status(500).json({ message: 'Error signing up', error });
