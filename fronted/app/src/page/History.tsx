@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Appbar } from '../components/Appbar';
 import { useInteractions } from '../hooks/useInteractions';
-import { ClipLoader } from 'react-spinners';
 
 export function History() {
     const { interactions, loading, error } = useInteractions();
@@ -22,7 +21,6 @@ export function History() {
                 <h2 className="text-3xl font-bold text-teal-700 mb-4">Chat History</h2>
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <ClipLoader color={"#36d7b7"} loading={loading} size={50} />
                     </div>
                 ) : error ? (
                     <div className="text-center text-red-500">{error}</div>

@@ -1,11 +1,9 @@
-
 import React, { useState, Fragment } from 'react';
 import axios from 'axios';
 import { Dialog, Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import { BECKAND_URL } from '../config';
 import { useSpecializations } from '../hooks/useSpecializations';
-import { ClipLoader } from 'react-spinners';
 
 export function Chat() {
     const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +104,6 @@ export function Chat() {
 
                                     {specializationsLoading ? (
                                         <div className="flex justify-center items-center h-64">
-                                            <ClipLoader color={"#36d7b7"} loading={specializationsLoading} size={50} />
                                         </div>
                                     ) : specializationsError ? (
                                         <div className="text-center text-red-500">{specializationsError}</div>

@@ -1,9 +1,7 @@
 
-import 'tailwindcss/tailwind.css';
 import { Appbar } from './Appbar';
 import Chat from '../page/Chat';
 import { useNavigate } from 'react-router-dom';
-import { ClipLoader } from 'react-spinners';
 import { useDoctorDetails } from '../hooks/useDcotordetails';
 
 
@@ -35,7 +33,6 @@ const MedicalTemplate: React.FC = () => {
                         </div>
                         {loading ? (
                             <div className="flex justify-center items-center h-64">
-                                <ClipLoader color={"#36d7b7"} loading={loading} size={50} />
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
