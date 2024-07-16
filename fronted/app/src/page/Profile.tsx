@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Chat } from './Chat';
 import { Appbar } from '../components/Appbar';
 import { BECKAND_URL } from '../config';
 import { Spinner } from '../components/Spinner';
@@ -48,7 +47,6 @@ export const Profile: React.FC = () => {
     return (
         <div className="min-h-screen bg-gray-100">
             <Appbar />
-            <Chat />
             <div className="container mx-auto p-6">
                 {loading ? (
                     <div className="w-screen h-screen flex justify-center items-center">
