@@ -12,6 +12,7 @@ export function Signup() {
         gender: ''
     });
     const [emailError, setEmailError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,18 +34,29 @@ export function Signup() {
         }
 
         try {
+            setLoading(true);
             const res = await axios.post(`${BECKAND_URL}/signup`, formData);
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('email', res.data.email);
+            setLoading(false);
             navigate('/');
         } catch (error) {
-            console.error('Error during signup:', error);
+            setLoading(false);
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.status === 400 && error.response.data.message === "Email already exists") {
+                    setEmailError("This email is already registered.");
+                } else {
+                    console.error('Error during signup:', error);
+                }
+            } else {
+                console.error('Error during signup:', error);
+            }
         }
     };
 
     return (
         <div className="h-screen flex flex-col md:flex-row">
-            <div className="md:w-1/2  rounded-lg hidden md:block">
+            <div className="md:w-1/2 rounded-lg hidden md:block">
                 <img src="https://img.freepik.com/premium-vector/medical-booking-application-template-with-photo_23-2148569067.jpg?w=740"
                     alt="Medical"
                     className="max-w-full h-auto rounded-lg" />
@@ -103,7 +115,7 @@ export function Signup() {
                                 type="submit"
                                 className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
                             >
-                                Sign up
+                                {loading ? "Please Wait..." : "Sign Up"}
                             </button>
                         </div>
                     </form>

@@ -60,7 +60,7 @@ export function Chat() {
         <div className="fixed bottom-5 right-5 z-50">
             <button
                 onClick={togglePopup}
-                className="bg-[#0e8f83] text-white p-3 rounded-full shadow-lg"
+                className="bg-[#0e8f83] text-white p-6 rounded-full shadow-lg"
             >
                 💬
             </button>
@@ -95,6 +95,29 @@ export function Chat() {
                                         <div className="flex items-center space-x-2">
                                             <span className="text-lg font-semibold text-green-900">Chat</span>
                                         </div>
+                                        <div>
+                                            {specializationsLoading ? (
+                                                <div className="flex justify-center items-center h-64">
+                                                </div>
+                                            ) : specializationsError ? (
+                                                <div className="text-center text-red-500">{specializationsError}</div>
+                                            ) : (
+                                                <div className="flex items-center justify-center w-full">
+                                                    <select
+                                                        value={selectedSpecialization}
+                                                        onChange={(e) => setSelectedSpecialization(e.target.value)}
+                                                        className="p-2 border border-gray-300 rounded"
+                                                    >
+                                                        <option value="">Select Specialization</option>
+                                                        {specializations.map((spec) => (
+                                                            <option key={spec} value={spec}>
+                                                                {spec}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            )}
+                                        </div>
                                         <div className="flex items-center space-x-2">
                                             <button onClick={closeDialog} className="text-xl font-bold">
                                                 &times;
@@ -102,27 +125,7 @@ export function Chat() {
                                         </div>
                                     </div>
 
-                                    {specializationsLoading ? (
-                                        <div className="flex justify-center items-center h-64">
-                                        </div>
-                                    ) : specializationsError ? (
-                                        <div className="text-center text-red-500">{specializationsError}</div>
-                                    ) : (
-                                        <div className="flex items-center justify-center mb-4">
-                                            <select
-                                                value={selectedSpecialization}
-                                                onChange={(e) => setSelectedSpecialization(e.target.value)}
-                                                className="p-2 border border-gray-300 rounded"
-                                            >
-                                                <option value="">Select Specialization</option>
-                                                {specializations.map((spec) => (
-                                                    <option key={spec} value={spec}>
-                                                        {spec}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    )}
+
 
                                     <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-80">
                                         {messages.map((message, index) => (
