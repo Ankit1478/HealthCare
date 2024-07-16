@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Container, Typography, Avatar, Paper, CircularProgress, Alert, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { Appbar } from '../components/Appbar';
+import { BECKAND_URL } from '../config';
 
 interface Doctor {
     name: string;
@@ -33,7 +34,7 @@ const DoctorDetails: React.FC = () => {
     useEffect(() => {
         const fetchDoctorDetails = async () => {
             try {
-                const response = await axios.get<Doctor>(`http://localhost:8080/doctordetails/${id}`);
+                const response = await axios.get<Doctor>(`${BECKAND_URL}/doctordetails/${id}`);
                 setDoctor(response.data);
             } catch (err) {
                 setError('Failed to fetch doctor details');
@@ -56,7 +57,7 @@ const DoctorDetails: React.FC = () => {
                     return;
                 }
 
-                const response = await axios.get<Interaction[]>(`http://localhost:8080/interactions/${id}`, {
+                const response = await axios.get<Interaction[]>(`${BECKAND_URL}/interactions/${id}`, {
                     headers: {
                         Authorization: token,
                     },

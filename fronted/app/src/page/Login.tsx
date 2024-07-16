@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { BECKAND_URL } from '../config';
 
 export function Login() {
     const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ export function Login() {
         }
 
         try {
-            const res = await axios.post('http://localhost:8080/login', formData);
+            const res = await axios.post(`${BECKAND_URL}/login`, formData);
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('email', res.data.email);
             navigate('/');

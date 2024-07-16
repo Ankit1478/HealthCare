@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Chat } from './Chat';
 import { Appbar } from '../components/Appbar';
+import { BECKAND_URL } from '../config';
 
 
 
@@ -14,7 +15,7 @@ export const Profile: React.FC = () => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const result = await axios.get('http://localhost:8080/profile', {
+                const result = await axios.get(`${BECKAND_URL}/profile`, {
                     headers: { Authorization: token }
                 });
                 setProfile(result.data);
@@ -27,7 +28,7 @@ export const Profile: React.FC = () => {
         const fetchInteractions = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const result = await axios.get('http://localhost:8080/interactions', {
+                const result = await axios.get(`${BECKAND_URL}/interactions`, {
                     headers: { Authorization: token }
                 });
                 setInteractions(result.data);

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 import { Appbar } from './Appbar';
-import axios from 'axios';
 import Chat from '../page/Chat';
 import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
+import { useDoctorDetails } from '../hooks/useDcotordetails';
 
 interface Doctor {
     _id: string;
@@ -13,14 +14,9 @@ interface Doctor {
 }
 
 const MedicalTemplate: React.FC = () => {
-    const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const { doctors, loading } = useDoctorDetails();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        axios.get('http://localhost:8080/doctordetails')
-            .then(response => setDoctors(response.data))
-            .catch(error => console.error('Error fetching doctors:', error));
-    }, []);
 
     const handleImageClick = (id: string) => {
         navigate(`/doctor/${id}`);
@@ -43,24 +39,30 @@ const MedicalTemplate: React.FC = () => {
                             <span className="text-teal-500">Our Doctors</span>
                             <h2 className="text-3xl font-bold">Our Specialist</h2>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <Chat />
-                            {doctors.map((doctor, index) => (
-                                <div
-                                    key={index}
-                                    className="bg-white rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl"
-                                    onClick={() => handleImageClick(doctor._id)}
-                                >
-                                    <div className="flex flex-col items-center p-4">
-                                        <img src={doctor.image} alt={doctor.name} className="h-64 w-full object-cover rounded-t-lg" />
-                                        <div className="p-4 text-center">
-                                            <h3 className="text-xl font-semibold text-gray-800">{doctor.name}</h3>
-                                            <span className="text-gray-600">{doctor.specialization}</span>
+                        {loading ? (
+                            <div className="flex justify-center items-center h-64">
+                                <ClipLoader color={"#36d7b7"} loading={loading} size={50} />
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <Chat />
+                                {doctors.map((doctor, index) => (
+                                    <div
+                                        key={index}
+                                        className="bg-white rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl"
+                                        onClick={() => handleImageClick(doctor._id)}
+                                    >
+                                        <div className="flex flex-col items-center p-4">
+                                            <img src={doctor.image} alt={doctor.name} className="h-64 w-full object-cover rounded-t-lg" />
+                                            <div className="p-4 text-center">
+                                                <h3 className="text-xl font-semibold text-gray-800">{doctor.name}</h3>
+                                                <span className="text-gray-600">{doctor.specialization}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

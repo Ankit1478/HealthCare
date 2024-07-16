@@ -1,9 +1,8 @@
-
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { Doctor } = require('./model');
 
-mongoose.connect('mongodb+srv://varsha1478v:cRuszUJ6QhP2Rubb@cluster0.jhwrfz5.mongodb.net/ark', {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(async () => {

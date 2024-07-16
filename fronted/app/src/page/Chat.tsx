@@ -1,11 +1,14 @@
-import React, { useState, useEffect, Fragment } from 'react';
+
+import React, { useState, Fragment } from 'react';
 import axios from 'axios';
 import { Dialog, Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
+import { BECKAND_URL } from '../config';
+import { useSpecializations } from '../hooks/useSpecializations';
+import { ClipLoader } from 'react-spinners';
 
 export function Chat() {
     const [isOpen, setIsOpen] = useState(false);
-    const [specializations, setSpecializations] = useState<string[]>([]);
     const [selectedSpecialization, setSelectedSpecialization] = useState<string>('');
     const [query, setQuery] = useState<string>('');
     const [messages, setMessages] = useState<any[]>([]);
@@ -14,18 +17,7 @@ export function Chat() {
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
-
-    useEffect(() => {
-        const fetchSpecializations = async () => {
-            try {
-                const result = await axios.get('http://localhost:8080/specializations');
-                setSpecializations(result.data);
-            } catch (error) {
-                console.error('Error fetching specializations:', error);
-            }
-        };
-        fetchSpecializations();
-    }, []);
+    const { specializations, loading: specializationsLoading, error: specializationsError } = useSpecializations();
 
     const togglePopup = () => {
         setIsOpen(!isOpen);
@@ -45,7 +37,7 @@ export function Chat() {
         try {
             const token = localStorage.getItem('token');
             const result = await axios.post(
-                'http://localhost:8080/chat',
+                `${BECKAND_URL}/chat`,
                 { specialization: selectedSpecialization, query },
                 { headers: { Authorization: token } }
             );
@@ -99,24 +91,12 @@ export function Chat() {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="bg-white rounded-lg max-w-md mx-auto p-5 w-full z-50">
-                                <div className="">
-                                    <div className="flex items-center justify-between p-4 ">
+                            <div className="bg-white rounded-lg max-w-md mx-auto p-6 w-full z-50">
+                                <div>
+                                    <div className="flex items-center justify-between p-4">
                                         <div className="flex items-center space-x-2">
                                             <span className="text-lg font-semibold text-green-900">Chat</span>
                                         </div>
-                                        <select
-                                            value={selectedSpecialization}
-                                            onChange={(e) => setSelectedSpecialization(e.target.value)}
-                                            className="p-2 border border-gray-300 rounded"
-                                        >
-                                            <option value="">Select Specialization</option>
-                                            {specializations.map((spec) => (
-                                                <option key={spec} value={spec}>
-                                                    {spec}
-                                                </option>
-                                            ))}
-                                        </select>
                                         <div className="flex items-center space-x-2">
                                             <button onClick={closeDialog} className="text-xl font-bold">
                                                 &times;
@@ -124,16 +104,39 @@ export function Chat() {
                                         </div>
                                     </div>
 
-                                    <div className="flex-1 overflow-y-auto p-4 space-y-4  max-h-80">
+                                    {specializationsLoading ? (
+                                        <div className="flex justify-center items-center h-64">
+                                            <ClipLoader color={"#36d7b7"} loading={specializationsLoading} size={50} />
+                                        </div>
+                                    ) : specializationsError ? (
+                                        <div className="text-center text-red-500">{specializationsError}</div>
+                                    ) : (
+                                        <div className="flex items-center justify-center mb-4">
+                                            <select
+                                                value={selectedSpecialization}
+                                                onChange={(e) => setSelectedSpecialization(e.target.value)}
+                                                className="p-2 border border-gray-300 rounded"
+                                            >
+                                                <option value="">Select Specialization</option>
+                                                {specializations.map((spec) => (
+                                                    <option key={spec} value={spec}>
+                                                        {spec}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-80">
                                         {messages.map((message, index) => (
                                             <div key={index} className="space-y-4">
                                                 <div className="flex justify-end">
-                                                    <div className=" text-black p-3 rounded-lg shadow-md">
+                                                    <div className="text-black p-3 rounded-lg shadow-md">
                                                         {message.query}
                                                     </div>
                                                 </div>
                                                 <div className="flex items-start space-x-2">
-                                                    <div className="bg-white text-gray-800 p-3 rounded-lg shadow-md border ">
+                                                    <div className="bg-white text-gray-800 p-3 rounded-lg shadow-md border">
                                                         {message.response}
                                                     </div>
                                                 </div>
@@ -146,9 +149,8 @@ export function Chat() {
                                         )}
                                     </div>
 
-                                    <form onSubmit={handleSubmit} className="p-4  ">
+                                    <form onSubmit={handleSubmit} className="p-4">
                                         <div className="flex flex-col space-y-2">
-
                                             <textarea
                                                 value={query}
                                                 onChange={(e) => setQuery(e.target.value)}

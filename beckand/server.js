@@ -7,14 +7,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('./middleware/auth');
 const { Patient, Doctor, Interaction } = require('./model');
-const axios = require('axios');
+const { VertexAI } = require("@google-cloud/vertexai");
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb+srv://varsha1478v:cRuszUJ6QhP2Rubb@cluster0.jhwrfz5.mongodb.net/ark', {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
@@ -22,6 +22,8 @@ mongoose.connect('mongodb+srv://varsha1478v:cRuszUJ6QhP2Rubb@cluster0.jhwrfz5.mo
 }).catch((err) => {
   console.error('Error connecting to MongoDB:', err);
 });
+
+const vertexAI = new VertexAI({ project: process.env.GOOGLE_PROJECT_ID, location: process.env.GOOGLE_LOCATION });
 
 const formatGeneratedText = (text) => {
   return text
@@ -36,24 +38,13 @@ const formatGeneratedText = (text) => {
 
 const generateContent = async (prompt) => {
   try {
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.GOOGLE_API_KEY}`,
-      {
-        contents: [
-          {
-            parts: [
-              { text: prompt }
-            ]
-          }
-        ]
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    const text = response.data.candidates[0].content.parts[0].text;
+    const model = vertexAI.preview.getGenerativeModel({ model: "gemini-pro" });
+    const request = {
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+    };
+    const result = await model.generateContent(request);
+    const response = await result.response;
+    const text = response.candidates[0].content.parts[0].text;
     return formatGeneratedText(text);
   } catch (error) {
     console.error("Error generating content:", error);
@@ -135,7 +126,6 @@ app.get('/profile', auth, async (req, res) => {
   }
 });
 
-
 app.get('/doctordetails', async (req, res) => {
   try {
     const doctors = await Doctor.find();
@@ -197,5 +187,5 @@ app.post('/chat', auth, async (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log('Server is running on port 3000');
+  console.log('Server is running on port 8080');
 });
