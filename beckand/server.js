@@ -6,7 +6,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('./middleware/auth');
-const { Patient, Doctor, Interaction } = require('./model');
+const { Patient, Doctor, Interaction } = require('./db/model');
 const axios = require('axios');
 
 const app = express();
