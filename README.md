@@ -54,7 +54,7 @@ This project implements CI using GitHub Actions. The provided `build.yml` workfl
    node or nodemon server.js
 
 #### Using Docker
-###Fronted 
+### Fronted 
 1. Build the Docker image: 
      ```sh
    docker build -t your_frontend_image_name .
@@ -62,7 +62,7 @@ This project implements CI using GitHub Actions. The provided `build.yml` workfl
    ```sh
    docker run -p your_port:your_port your_frontend_image_name
 
-###Backend
+### Backend
 1. Build the Docker image: 
      ```sh
    docker build -t your_backend_image_name .
