@@ -6,7 +6,7 @@
 Healthcare is a web application that allows users to sign up, sign in, ask health-related queries to a chatbot, and get real-time responses. Users can also see chat interactions with each doctor, along with the date and time. The application features a responsive and beautiful UI.
 
 ## Tech Stack
-- **Frontend**: React with TypeScript
+- **Frontend**: React with TypeScript and Tailwind CSS 
 - **Backend**: Node.js with JavaScript
 - **Authentication**: JWT for session management and authentication
 - **Password Security**: bcrypt library for hashing passwords
