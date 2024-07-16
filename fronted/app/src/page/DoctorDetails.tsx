@@ -110,8 +110,7 @@ const DoctorDetails: React.FC = () => {
                                 </div>
                             </div>
                             <div className="mt-4">
-                                <Typography variant="h6">Biography</Typography>
-                                <Typography variant="body1">{doctor.bio}</Typography>
+                                <Typography variant="h6">{doctor?.name}  is a skilled professional dedicated to diagnosing, treating, and preventing illnesses, thereby saving lives and promoting health</Typography>
                             </div>
                         </Paper>
                     </motion.div>
