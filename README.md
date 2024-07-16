@@ -74,7 +74,7 @@ This project implements CI using GitHub Actions. The provided `build.yml` workfl
 
 #### GitHub Actions Workflow
 ## A sample GitHub Actions workflow (.github/workflows/build.yml) is provided to automate the build process:
-```sh
+  ```sh
 name: CI
 on:
   push:
