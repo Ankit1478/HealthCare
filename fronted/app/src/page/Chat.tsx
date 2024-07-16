@@ -3,11 +3,14 @@ import axios from 'axios';
 import { Dialog, Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import { BECKAND_URL } from '../config';
-import { useSpecializations } from '../hooks/useSpecializations';
 
-export function Chat() {
+interface ChatProps {
+    doctorId: string;
+    specialization: string;
+}
+
+export function Chat({ doctorId, specialization }: ChatProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedSpecialization, setSelectedSpecialization] = useState<string>('');
     const [query, setQuery] = useState<string>('');
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -15,7 +18,6 @@ export function Chat() {
     const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
-    const { specializations, loading: specializationsLoading, error: specializationsError } = useSpecializations();
 
     const togglePopup = () => {
         setIsOpen(!isOpen);
@@ -33,10 +35,9 @@ export function Chat() {
         e.preventDefault();
         setError(null);
         try {
-            const token = localStorage.getItem('token');
             const result = await axios.post(
                 `${BECKAND_URL}/chat`,
-                { specialization: selectedSpecialization, query },
+                { specialization, query, doctorId },
                 { headers: { Authorization: token } }
             );
             const newMessage = {
@@ -52,6 +53,7 @@ export function Chat() {
                 setError(error.response.data.message);
             } else {
                 console.error('Error during chat:', error);
+                setError('An error occurred during chat.');
             }
         }
     };
@@ -60,7 +62,7 @@ export function Chat() {
         <div className="fixed bottom-5 right-5 z-50">
             <button
                 onClick={togglePopup}
-                className="bg-[#0e8f83] text-white p-6 rounded-full shadow-lg"
+                className="bg-[#0e8f83] text-white p-7 rounded-full shadow-lg"
             >
                 💬
             </button>
@@ -93,30 +95,7 @@ export function Chat() {
                                 <div>
                                     <div className="flex items-center justify-between p-4">
                                         <div className="flex items-center space-x-2">
-                                            <span className="text-lg font-semibold text-green-900">Chat</span>
-                                        </div>
-                                        <div>
-                                            {specializationsLoading ? (
-                                                <div className="flex justify-center items-center h-64">
-                                                </div>
-                                            ) : specializationsError ? (
-                                                <div className="text-center text-red-500">{specializationsError}</div>
-                                            ) : (
-                                                <div className="flex items-center justify-center w-full">
-                                                    <select
-                                                        value={selectedSpecialization}
-                                                        onChange={(e) => setSelectedSpecialization(e.target.value)}
-                                                        className="p-2 border border-gray-300 rounded"
-                                                    >
-                                                        <option value="">Select Specialization</option>
-                                                        {specializations.map((spec) => (
-                                                            <option key={spec} value={spec}>
-                                                                {spec}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            )}
+                                            <span className="text-lg font-semibold text-green-900">Chat with Our {specialization} specialist</span>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <button onClick={closeDialog} className="text-xl font-bold">
@@ -124,8 +103,6 @@ export function Chat() {
                                             </button>
                                         </div>
                                     </div>
-
-
 
                                     <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-80">
                                         {messages.map((message, index) => (

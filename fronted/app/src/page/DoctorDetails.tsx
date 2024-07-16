@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Container, Typography, Avatar, Paper, CircularProgress, Alert, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { Appbar } from '../components/Appbar';
 import { BECKAND_URL } from '../config';
+import Chat from './Chat';
 
 interface Doctor {
     name: string;
@@ -51,9 +52,9 @@ const DoctorDetails: React.FC = () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
-                    setError('please Login');
+                    setError('Please log in.');
                     setLoading(false);
-                    navigate("/signin")
+                    navigate("/signin");
                     return;
                 }
 
@@ -110,7 +111,7 @@ const DoctorDetails: React.FC = () => {
                             </div>
                             <div className="mt-4">
                                 <Typography variant="h6">Biography</Typography>
-                                <Typography variant="body1">{doctor?.name}  is a skilled professional dedicated to diagnosing, treating, and preventing illnesses, thereby saving lives and promoting health</Typography>
+                                <Typography variant="body1">{doctor.bio}</Typography>
                             </div>
                         </Paper>
                     </motion.div>
@@ -157,6 +158,9 @@ const DoctorDetails: React.FC = () => {
                     )}
                 </div>
             </Container>
+            {doctor && (
+                <Chat doctorId={id || ""} specialization={doctor.specialization} />
+            )}
         </div>
     );
 };

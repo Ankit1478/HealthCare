@@ -178,15 +178,16 @@ app.get('/interactions', auth, async (req, res) => {
 });
 
 app.post('/chat', auth, async (req, res) => {
-  const { specialization, query } = req.body;
+  const { specialization, query, doctorId } = req.body;
   
   try {
-    const doctor = await Doctor.findOne({ specialization });
-    if (!doctor) {
-      return res.status(404).json({ message: 'Doctor not found' });
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor || doctor.specialization !== specialization) {
+      return res.status(404).json({ message: 'Doctor not found or specialization does not match' });
     }
+
     const response = await generateContent(query);
-    if(response !== "") {
+    if (response !== "") {
       await saveInteraction(req.patient.id, doctor._id, query, response);
     }
     res.json({ response });
@@ -195,7 +196,6 @@ app.post('/chat', auth, async (req, res) => {
     res.status(500).send('Error handling chat');
   }
 });
-
 app.listen(8080, () => {
   console.log('Server is running on port 3000');
 });

@@ -1,5 +1,4 @@
 import { Appbar } from './Appbar';
-import Chat from '../page/Chat';
 import { useNavigate } from 'react-router-dom';
 import { useDoctorDetails } from '../hooks/useDcotordetails';
 import { Spinner } from './Spinner';
@@ -37,7 +36,7 @@ const MedicalTemplate: React.FC = () => {
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                <Chat />
+
                                 {doctors.map((doctor, index) => (
                                     <div
                                         key={index}
