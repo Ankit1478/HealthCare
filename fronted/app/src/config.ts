@@ -1,1 +1,1 @@
-export const BECKAND_URL = "http://localhost:8080"
+export const BECKAND_URL = "https://healthcarebeckand.vercel.app"

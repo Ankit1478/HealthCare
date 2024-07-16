@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('./middleware/auth');
 const { Patient, Doctor, Interaction } = require('./model');
-const { VertexAI } = require("@google-cloud/vertexai");
+const axios = require('axios');
 
 const app = express();
 
@@ -23,8 +23,6 @@ mongoose.connect(process.env.MONGO_URL, {
   console.error('Error connecting to MongoDB:', err);
 });
 
-const vertexAI = new VertexAI({ project: process.env.GOOGLE_PROJECT_ID, location: process.env.GOOGLE_LOCATION });
-
 const formatGeneratedText = (text) => {
   return text
     .replace(/##+/g, '') 
@@ -38,13 +36,24 @@ const formatGeneratedText = (text) => {
 
 const generateContent = async (prompt) => {
   try {
-    const model = vertexAI.preview.getGenerativeModel({ model: "gemini-pro" });
-    const request = {
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-    };
-    const result = await model.generateContent(request);
-    const response = await result.response;
-    const text = response.candidates[0].content.parts[0].text;
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.GOOGLE_API_KEY}`,
+      {
+        contents: [
+          {
+            parts: [
+              { text: prompt }
+            ]
+          }
+        ]
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    const text = response.data.candidates[0].content.parts[0].text;
     return formatGeneratedText(text);
   } catch (error) {
     console.error("Error generating content:", error);
@@ -126,6 +135,7 @@ app.get('/profile', auth, async (req, res) => {
   }
 });
 
+
 app.get('/doctordetails', async (req, res) => {
   try {
     const doctors = await Doctor.find();
@@ -187,5 +197,5 @@ app.post('/chat', auth, async (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log('Server is running on port 8080');
+  console.log('Server is running on port 3000');
 });
