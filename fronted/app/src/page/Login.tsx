@@ -44,7 +44,7 @@ export function Login() {
     const dummySumbit = async () => {
         setLoading(true);
         localStorage.setItem('email', "ankit@gmail.com");
-        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdjMzdjOTVlMTg5ZGIxNDdjNThhNSIsImlhdCI6MTcyMTIyMzc5MywiZXhwIjoxNzIxMjI3MzkzfQ.q6d2D00Xs6HVKFkIt5lPu_awbKT_U9qZuySO7C_Qo0A");
+        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdjMzdjOTVlMTg5ZGIxNDdjNThhNSIsImlhdCI6MTcyMTIzMTgwOCwiZXhwIjoxNzIxMjM1NDA4fQ.4yC_lCE96lQRwVS6N-dh7rAHfjE7otf6YjlA8ameP2k");
         setLoading(false);
         navigate('/');
         setLoading(false);
