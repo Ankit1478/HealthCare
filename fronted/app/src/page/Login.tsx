@@ -5,13 +5,11 @@ import { BECKAND_URL } from '../config';
 
 export function Login() {
     const [formData, setFormData] = useState({
-        name: '',
         email: '',
         password: '',
-        age: '',
-        gender: ''
     });
     const [emailError, setEmailError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,14 +31,24 @@ export function Login() {
         }
 
         try {
+            setLoading(true);
             const res = await axios.post(`${BECKAND_URL}/login`, formData);
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('email', res.data.email);
+            setLoading(false);
             navigate('/');
         } catch (error) {
             console.error('Error during signup:', error);
         }
     };
+    const dummySumbit = async () => {
+        setLoading(true);
+        localStorage.setItem('email', "ankit@gmail.com");
+        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdjMzdjOTVlMTg5ZGIxNDdjNThhNSIsImlhdCI6MTcyMTIyMzc5MywiZXhwIjoxNzIxMjI3MzkzfQ.q6d2D00Xs6HVKFkIt5lPu_awbKT_U9qZuySO7C_Qo0A");
+        setLoading(false);
+        navigate('/');
+        setLoading(false);
+    }
 
     return (
         <div className="h-screen flex flex-col md:flex-row">
@@ -90,6 +98,14 @@ export function Login() {
                             </button>
                         </div>
                     </form>
+                    <div>
+                        <button onClick={dummySumbit}
+                            type="submit"
+                            className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
+                        >
+                            {loading ? "Please Wait..." : "Sign in without Credentials"}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

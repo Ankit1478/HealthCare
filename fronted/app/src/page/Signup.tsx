@@ -53,7 +53,13 @@ export function Signup() {
             }
         }
     };
-
+    const dummySumbit = async () => {
+        setLoading(true);
+        localStorage.setItem('email', "ankit@gmail.com");
+        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdjMzdjOTVlMTg5ZGIxNDdjNThhNSIsImlhdCI6MTcyMTIyMzc5MywiZXhwIjoxNzIxMjI3MzkzfQ.q6d2D00Xs6HVKFkIt5lPu_awbKT_U9qZuySO7C_Qo0A");
+        setLoading(false);
+        navigate('/');
+    }
     return (
         <div className="h-screen flex flex-col md:flex-row">
             <div className="md:w-1/2 rounded-lg hidden md:block">
@@ -111,14 +117,25 @@ export function Signup() {
                             onChange={handleInputChange}
                         />
                         <div>
-                            <button
-                                type="submit"
-                                className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
-                            >
-                                {loading ? "Please Wait..." : "Sign Up"}
-                            </button>
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
+                                >
+                                    {loading ? "Please Wait..." : "Sign Up"}
+                                </button>
+                            </div>
+
                         </div>
                     </form>
+                    <div>
+                        <button onClick={dummySumbit}
+                            type="submit"
+                            className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
+                        >
+                            {loading ? "Please Wait..." : "Sign Up without Credentials"}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
