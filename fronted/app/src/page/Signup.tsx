@@ -55,11 +55,13 @@ export function Signup() {
     };
     const dummySumbit = async () => {
         setLoading(true);
-        localStorage.setItem('email', "ankit@gmail.com");
-        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdjMzdjOTVlMTg5ZGIxNDdjNThhNSIsImlhdCI6MTcyMTIzMTgwOCwiZXhwIjoxNzIxMjM1NDA4fQ.4yC_lCE96lQRwVS6N-dh7rAHfjE7otf6YjlA8ameP2k");
+        localStorage.setItem('email', "ankitraj@gmail.com");
+        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdmOWFmMTQ3MDRiOWVmMDIzNjUwNSIsImlhdCI6MTcyMTIzNTg4N30.jWAIiTEzS20-Ze1uuvZqn1C8TfxK5DhhP1NF2o0gZ2k");
         setLoading(false);
         navigate('/');
+        setLoading(false);
     }
+
     return (
         <div className="h-screen flex flex-col md:flex-row">
             <div className="md:w-1/2 rounded-lg hidden md:block">
