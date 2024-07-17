@@ -29,6 +29,8 @@ const formatGeneratedText = (text) => {
     .replace(/\*\*/g, '') 
     .replace(/\*/g, '') 
     .replace(/- /g, '- ') 
+    .replace(/- /g, '\n- ')
+    .replace(/(\d\.)/g, '\n$1')
     .replace(/(\d\.)/g, '\n$1') 
     .replace(/\n+/g, ' ') 
     .trim(); 
