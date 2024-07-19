@@ -8,7 +8,7 @@ Healthcare is a web application that allows users to sign up, sign in, ask healt
 ## Tech Stack
 - **Frontend**: React with TypeScript and Tailwind CSS 
 - **Backend**: Node.js with JavaScript
-- **Authentication**: JWT for session management and authentication
+- **Authentication**: JWT , ZOD  for session management and authentication
 - **Password Security**: bcrypt library for hashing passwords
 - **Database**: MongoDB
 - **Containerization**: Docker for both React and Node.js
@@ -30,6 +30,39 @@ This project implements CI using GitHub Actions. The provided `build.yml` workfl
 - **Dependency Management**: Necessary dependencies for both the backend and frontend are installed, ensuring a consistent build environment.
 - **Early Detection of Issues**: By automating the build process, issues can be detected and addressed early.
 
+
+## Zod for Robust Data Validation
+- This project leverages the powerful Zod library (https://zod.dev/) to ensure the integrity and security of user-provided data, particularly for email addresses, 
+   names, and passwords.
+## Zod's Advantages:
+- Type Safety (TypeScript-first): Zod enforces type safety, preventing runtime errors and improving code maintainability.
+- Concise Syntax: It offers a clear and concise syntax for defining data schemas, making validation logic easy to read and understand.
+- Expressive Validations: Zod supports a rich set of built-in validation methods (e.g., email(), min(), max()) and custom validation functions for complex 
+  requirements.
+- User-Friendly Error Messages: Zod provides informative error messages, aiding in debugging and user experience.
+
+- ```
+  const { z } = require('zod');
+   const signupSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(6),
+  age: z.number().int().positive(),
+  gender: z.string(),
+  });
+
+  const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+  });
+
+   const chatSchema = z.object({
+     specialization: z.string().min(1),
+     query: z.string().min(1),
+     doctorId: z.string().min(1),
+   });
+   module.exports = { signupSchema, loginSchema, chatSchema };
+  
 ## Running the Project
 
 ### Using npm
