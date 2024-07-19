@@ -8,11 +8,11 @@ const jwt = require('jsonwebtoken');
 const auth = require('./middleware/auth');
 const { Patient, Doctor, Interaction } = require('./db/model');
 const axios = require('axios');
-
+const{signupSchema , loginSchema ,chatSchema } = require('./zod');
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json());// parse the json when incoming request come 
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -22,6 +22,18 @@ mongoose.connect(process.env.MONGO_URL, {
 }).catch((err) => {
   console.error('Error connecting to MongoDB:', err);
 });
+
+
+// Middleware for validation
+const validate = (schema) => (req, res, next) => {
+  try {
+    schema.parse(req.body);
+    next();
+  } catch (err) {
+    return res.status(400).json(err.errors);
+  }
+};
+
 
 const formatGeneratedText = (text) => {
   return text
@@ -97,36 +109,42 @@ app.get('/specializations', (req, res) => {
   res.json(specializations);
 });
 
-app.post('/signup', async (req, res) => {
-  const { name, email, password, age, gender } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const patient = new Patient({ name, email, password: hashedPassword, age, gender });
-    await patient.save();
-    const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET);
-    res.json({ token, email });
-  } catch (error) {
-    res.status(500).json({ message: 'Error signing up', error });
-  }
+app.post('/signup', validate(signupSchema), async (req, res) => {
+    const { name, email, password, age, gender } = req.body;
+    try {
+        const existingPatient = await Patient.findOne({ email });
+        if (existingPatient) {
+            return res.status(400).json({ message: 'Email already exists' });
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const patient = new Patient({ name, email, password: hashedPassword, age, gender });
+        await patient.save();
+        const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET);
+        res.json({ token, email });
+    } catch (error) {
+        res.status(500).json({ message: 'Error signing up', error });
+    }
 });
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const patient = await Patient.findOne({ email });
-    if (!patient) {
-      return res.status(404).json({ message: 'Patient not found' });
+
+app.post('/login', validate(loginSchema), async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const patient = await Patient.findOne({ email });
+        if (!patient) {
+            return res.status(404).json({ message: 'Patient not found' });
+        }
+        const isMatch = await bcrypt.compare(password, patient.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+        const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET);
+        res.json({ token, email });
+    } catch (error) {
+        res.status(500).json({ message: 'Error logging in', error });
     }
-    const isMatch = await bcrypt.compare(password, patient.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-    const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET);
-    res.json({ token, email });
-  } catch (error) {
-    res.status(500).json({ message: 'Error logging in', error });
-  }
 });
+
 
 app.get('/profile', auth, async (req, res) => {
   try {
@@ -179,7 +197,7 @@ app.get('/interactions', auth, async (req, res) => {
   }
 });
 
-app.post('/chat', auth, async (req, res) => {
+app.post('/chat',validate(chatSchema), auth, async (req, res) => {
   const { specialization, query, doctorId } = req.body;
   
   try {

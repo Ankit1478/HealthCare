@@ -1,39 +1,55 @@
 import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { z, ZodError } from 'zod';
 import { BECKAND_URL } from '../config';
 
+const signupSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    age: z.preprocess((val) => parseInt(val as string, 10), z.number().int().positive("Age must be a positive number")),
+    gender: z.string().min(1, "Gender is required"),
+});
+
+interface FormData {
+    name: string;
+    email: string;
+    password: string;
+    age: number;
+    gender: string;
+}
+
+interface Errors {
+    name?: string;
+    email?: string;
+    password?: string;
+    age?: string;
+    gender?: string;
+}
+
 export function Signup() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
         password: '',
-        age: '',
+        age: 0,
         gender: ''
     });
-    const [emailError, setEmailError] = useState("");
+    const [errors, setErrors] = useState<Errors>({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-        if (name === 'email') setEmailError("");
-    };
-
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+        setFormData({ ...formData, [name]: name === 'age' ? parseInt(value) : value });
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: undefined }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!validateEmail(formData.email)) {
-            setEmailError("Please enter a valid email address.");
-            return;
-        }
-
         try {
+            signupSchema.parse(formData);
             setLoading(true);
             const res = await axios.post(`${BECKAND_URL}/signup`, formData);
             localStorage.setItem('token', res.data.token);
@@ -42,9 +58,15 @@ export function Signup() {
             navigate('/');
         } catch (error) {
             setLoading(false);
-            if (axios.isAxiosError(error) && error.response) {
+            if (error instanceof ZodError) {
+                const validationErrors: Errors = {};
+                error.errors.forEach((err) => {
+                    validationErrors[err.path[0] as keyof FormData] = err.message;
+                });
+                setErrors(validationErrors);
+            } else if (axios.isAxiosError(error) && error.response) {
                 if (error.response.status === 400 && error.response.data.message === "Email already exists") {
-                    setEmailError("This email is already registered.");
+                    setErrors({ email: "This email is already registered." });
                 } else {
                     console.error('Error during signup:', error);
                 }
@@ -53,14 +75,14 @@ export function Signup() {
             }
         }
     };
-    const dummySumbit = async () => {
+
+    const dummySubmit = async () => {
         setLoading(true);
         localStorage.setItem('email', "ankitraj@gmail.com");
         localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdmOWFmMTQ3MDRiOWVmMDIzNjUwNSIsImlhdCI6MTcyMTIzNTg4N30.jWAIiTEzS20-Ze1uuvZqn1C8TfxK5DhhP1NF2o0gZ2k");
         setLoading(false);
         navigate('/');
-        setLoading(false);
-    }
+    };
 
     return (
         <div className="h-screen flex flex-col md:flex-row">
@@ -86,6 +108,7 @@ export function Signup() {
                             name="name"
                             placeholder="Name"
                             onChange={handleInputChange}
+                            error={errors.name}
                         />
                         <div>
                             <LabelInput
@@ -94,8 +117,8 @@ export function Signup() {
                                 placeholder="ankit@gmail.com"
                                 onChange={handleInputChange}
                                 type="email"
+                                error={errors.email}
                             />
-                            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
                         </div>
                         <LabelInput
                             label="Password"
@@ -103,6 +126,7 @@ export function Signup() {
                             type="password"
                             placeholder="password"
                             onChange={handleInputChange}
+                            error={errors.password}
                         />
                         <LabelInput
                             label="Age"
@@ -110,6 +134,7 @@ export function Signup() {
                             type="number"
                             placeholder="Enter your age"
                             onChange={handleInputChange}
+                            error={errors.age}
                         />
                         <LabelInput
                             label="Gender"
@@ -117,21 +142,19 @@ export function Signup() {
                             type="text"
                             placeholder="Enter your Gender"
                             onChange={handleInputChange}
+                            error={errors.gender}
                         />
                         <div>
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
-                                >
-                                    {loading ? "Please Wait..." : "Sign Up"}
-                                </button>
-                            </div>
-
+                            <button
+                                type="submit"
+                                className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
+                            >
+                                {loading ? "Please Wait..." : "Sign Up"}
+                            </button>
                         </div>
                     </form>
                     <div>
-                        <button onClick={dummySumbit}
+                        <button onClick={dummySubmit}
                             type="submit"
                             className="w-full text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center me-2 mb-2"
                         >
@@ -146,13 +169,14 @@ export function Signup() {
 
 interface LabelInputProps {
     label: string;
-    name: string;
+    name: keyof FormData;
     placeholder: string;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     type?: string;
+    error?: string;
 }
 
-const LabelInput = ({ label, name, placeholder, onChange, type = "text" }: LabelInputProps) => {
+const LabelInput: React.FC<LabelInputProps> = ({ label, name, placeholder, onChange, type = "text", error }) => {
     return (
         <div>
             <label className="block mb-2 text-sm text-gray-900 font-bold">{label}</label>
@@ -164,6 +188,7 @@ const LabelInput = ({ label, name, placeholder, onChange, type = "text" }: Label
                 placeholder={placeholder}
                 required
             />
+            {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
     );
 };
