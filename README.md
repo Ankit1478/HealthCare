@@ -107,101 +107,101 @@ This project implements CI using GitHub Actions. The provided `build.yml` workfl
 
 #### GitHub Actions Workflow
 ## A sample GitHub Actions workflow (.github/workflows/build.yml) is provided to automate the build process:
-  ```sh
-name: CI
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-    
-jobs:
-  build-backend:
-    runs-on: ubuntu-latest
-    
-    services:
-      mongodb:
-        image: mongo:4.4.3
-        ports:
-          - 27017:27017
+    name: CI
+    on:
+     push:
+       branches: [main]
+     pull_request:
+       branches: [main]
+       
+    jobs:
+     build-backend:
+       runs-on: ubuntu-latest
+       
+       services:
+         mongodb:
+           image: mongo:4.4.3
+           ports:
+             - 27017:27017
+   
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+   
+         - name: Set up Node.js
+           uses: actions/setup-node@v3
+           with:
+             node-version: 18.16.0
+   
+         - name: Cache dependencies
+           uses: actions/cache@v2
+           with:
+             path: ~/.npm
+             key: ${{ runner.os }}-node-${{ hashFiles('backend/package-lock.json') }}
+             restore-keys: |
+               ${{ runner.os }}-node-
+   
+         - name: Install dependencies
+           run: npm install
+           working-directory: ./backend
+   
+         - name: Run tests
+           run: npm test
+           working-directory: ./backend
+   
+         - name: Build Docker image
+           run: docker build -t backend-app ./backend
+   
+         - name: Log in to Docker Hub
+           run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+   
+         - name: Tag and push image
+           run: |
+             docker tag backend-app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/backend-app:latest
+             docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend-app:latest
+   
+     build-frontend:
+       runs-on: ubuntu-latest
+   
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+   
+         - name: Set up Node.js
+           uses: actions/setup-node@v3
+           with:
+             node-version: 20
+   
+         - name: Cache dependencies
+           uses: actions/cache@v2
+           with:
+             path: ~/.npm
+             key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+             restore-keys: |
+               ${{ runner.os }}-node-
+   
+         - name: Install dependencies
+           run: npm install --legacy-peer-deps
+           working-directory: ./frontend
+   
+         - name: Run tests
+           run: npm test
+           working-directory: ./frontend
+   
+         - name: Build frontend
+           run: npm run build
+           working-directory: ./frontend
+   
+         - name: Build Docker image
+           run: docker build -t frontend-app ./frontend
+   
+         - name: Log in to Docker Hub
+           run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+   
+         - name: Tag and push image
+           run: |
+             docker tag frontend-app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-app:latest
+             docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-app:latest
+   
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.16.0
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('backend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./backend
-
-      - name: Run tests
-        run: npm test
-        working-directory: ./backend
-
-      - name: Build Docker image
-        run: docker build -t backend-app ./backend
-
-      - name: Log in to Docker Hub
-        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-
-      - name: Tag and push image
-        run: |
-          docker tag backend-app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/backend-app:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend-app:latest
-
-  build-frontend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-        working-directory: ./frontend
-
-      - name: Run tests
-        run: npm test
-        working-directory: ./frontend
-
-      - name: Build frontend
-        run: npm run build
-        working-directory: ./frontend
-
-      - name: Build Docker image
-        run: docker build -t frontend-app ./frontend
-
-      - name: Log in to Docker Hub
-        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-
-      - name: Tag and push image
-        run: |
-          docker tag frontend-app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-app:latest
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/frontend-app:latest
-
-
+## Now Rock
