@@ -14,7 +14,7 @@ const JWT_SECRET= "ankit";
 app.use(cors());
 app.use(bodyParser.json());// parse the json when incoming request come 
 
-mongoose.connect("mongodb+srv://ankit1478:ankit1478@cluster0.bgltbjs.mongodb.net/health", {
+mongoose.connect("", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
