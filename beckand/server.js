@@ -10,11 +10,11 @@ const { Patient, Doctor, Interaction } = require('./db/model');
 const axios = require('axios');
 const{signupSchema , loginSchema ,chatSchema } = require('./zod');
 const app = express();
-
+const JWT_SECRET= "ankit";
 app.use(cors());
 app.use(bodyParser.json());// parse the json when incoming request come 
 
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect("mongodb+srv://ankit1478:ankit1478@cluster0.bgltbjs.mongodb.net/health", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
@@ -119,7 +119,7 @@ app.post('/signup', validate(signupSchema), async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const patient = new Patient({ name, email, password: hashedPassword, age, gender });
         await patient.save();
-        const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ id: patient._id }, JWT_SECRET);
         res.json({ token, email });
     } catch (error) {
         res.status(500).json({ message: 'Error signing up', error });
@@ -138,7 +138,7 @@ app.post('/login', validate(loginSchema), async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
-        const token = jwt.sign({ id: patient._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ id: patient._id }, JWT_SECRET);
         res.json({ token, email });
     } catch (error) {
         res.status(500).json({ message: 'Error logging in', error });
@@ -217,5 +217,5 @@ app.post('/chat',validate(chatSchema), auth, async (req, res) => {
   }
 });
 app.listen(8080, () => {
-  console.log('Server is running on port 3000');
+  console.log('Server is running on port 8080');
 });

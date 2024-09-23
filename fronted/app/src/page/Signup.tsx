@@ -78,8 +78,8 @@ export function Signup() {
 
     const dummySubmit = async () => {
         setLoading(true);
-        localStorage.setItem('email', "ankitraj@gmail.com");
-        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTdmOWFmMTQ3MDRiOWVmMDIzNjUwNSIsImlhdCI6MTcyMTIzNTg4N30.jWAIiTEzS20-Ze1uuvZqn1C8TfxK5DhhP1NF2o0gZ2k");
+        localStorage.setItem('email', "ankit123@gmail.com");
+        localStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjFiMWQwMGE4NDk1MTUzOTI1MDAyMSIsImlhdCI6MTcyNzExNTcyOH0.yqO4SfW8-IiToZaKBdSxVUuvHjlTtqAV_N7CGHu9akg");
         setLoading(false);
         navigate('/');
     };

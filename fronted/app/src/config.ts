@@ -1,1 +1,1 @@
-export const BECKAND_URL = "https://healthcarebeckand.vercel.app"
+export const BECKAND_URL = "https://beckand.vercel.app"

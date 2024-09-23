@@ -8,16 +8,17 @@ export const Profile: React.FC = () => {
     const [profile, setProfile] = useState<any>(null);
     const [interactions, setInteractions] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
-
+    const token = localStorage.getItem('token');
     useEffect(() => {
         const fetchProfile = async () => {
             setLoading(true);
             try {
-                const token = localStorage.getItem('token');
+                
                 const result = await axios.get(`${BECKAND_URL}/profile`, {
                     headers: { Authorization: token }
                 });
                 setProfile(result.data);
+                console.log(result.data);
             } catch (error) {
                 console.error('Error fetching profile:', error);
             } finally {
@@ -28,11 +29,11 @@ export const Profile: React.FC = () => {
         const fetchInteractions = async () => {
             setLoading(true);
             try {
-                const token = localStorage.getItem('token');
                 const result = await axios.get(`${BECKAND_URL}/interactions`, {
                     headers: { Authorization: token }
                 });
                 setInteractions(result.data);
+                console.log(result.data)
             } catch (error) {
                 console.error('Error fetching interactions:', error);
             } finally {
